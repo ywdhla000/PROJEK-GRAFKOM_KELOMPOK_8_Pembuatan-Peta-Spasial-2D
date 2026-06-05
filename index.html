@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peta Kota - Dijkstra Pathfinding</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #1a2a1a; color: #eee; }
+    #app { max-width: 1200px; margin: 0 auto; padding: 12px; }
+    h1 { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #ddd; }
+
+    #toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding: 10px 12px; background: #1e1e1e;
+      border: 1px solid #444; border-radius: 10px; margin-bottom: 10px;
+    }
+    .btn {
+      padding: 6px 14px; border-radius: 7px; border: 1px solid #555;
+      background: #333; color: #ddd; font-size: 12px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn:hover  { background: #444; }
+    .btn.active { background: #5a2500; color: #f8961e; border-color: #f8961e; }
+
+    #map-wrap {
+      width: 100%; height: 580px; overflow: hidden; position: relative;
+      border: 1.5px solid #555; border-radius: 12px;
+      cursor: grab; background: #3a5a2a;
+    }
+    #map-wrap:active { cursor: grabbing; }
+    #map-svg { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+
+    #legend {
+      display: flex; flex-wrap: wrap; gap: 6px 12px;
+      padding: 8px 12px; background: #1e1e1e;
+      border: 1px solid #444; border-radius: 10px;
+      margin-top: 10px; font-size: 11px; color: #aaa;
+    }
+    .leg-item { display: flex; align-items: center; gap: 4px; }
+    .leg-dot  { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    #zoominfo { font-size: 11px; color: #888; margin-left: auto; }
+
+    #status {
+      font-size: 13px; color: #ccc; padding: 8px 12px;
+      background: #1e1e1e; border: 1px solid #444;
+      border-radius: 10px; margin-bottom: 10px;
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    #status .route-label { font-weight: 600; }
+    #status .start-label  { color: #2b8c4a; }
+    #status .finish-label { color: #c23b22; }
+
+    #speed-control { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #aaa; }
+    #speed-control input[type=range] { width: 80px; accent-color: #f8961e; }
+    #speed-input {
+      width: 45px; padding: 2px 4px; border-radius: 4px;
+      border: 1px solid #555; background: #222;
+      color: #f8961e; font-size: 12px; font-weight: 600; text-align: center;
+    }
+    #speed-input:focus { outline: 1px solid #f8961e; border-color: #f8961e; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <h1>🏙️ Peta Kota — Dijkstra Shortest Path (Modular ES Module)</h1>
+
+  <div id="toolbar">
+    <!--
+      PENTING: Tidak ada onclick="..." di sini!
+      Semua event listener dipasang di main.js via addEventListener.
+      Ini adalah best practice untuk ES Module.
+    -->
+    <button class="btn" id="btn-generate">🗺️ Acak Peta</button>
+    <button class="btn" id="btn-randomize">📍 Acak Rute</button>
+    <button class="btn" id="anim-btn">🚗 Start</button>
+
+    <div id="speed-control">
+      <span>🏎️ Laju:</span>
+      <input type="range"  id="speed-slider" min="1" max="50"  value="3">
+      <input type="number" id="speed-input"  min="1" max="100" value="3">
+      <span style="color:#888; font-size:10px">km/j</span>
+    </div>
+
+    <button class="btn" id="btn-zoom-in">🔍 Zoom In</button>
+    <button class="btn" id="btn-zoom-out">🔍 Zoom Out</button>
+    <button class="btn" id="btn-reset-view">⌂ Reset View</button>
+    <span id="zoominfo">Zoom: 100%</span>
+  </div>
+
+  <div id="status">
+    <span style="color:#666; font-size:12px">Tekan "Acak Peta" untuk memulai...</span>
+  </div>
+
+  <div id="map-wrap">
+    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <div id="legend"></div>
+</div>
+
+<!--
+  type="module" wajib agar ES import/export bekerja.
+  Konsekuensi: fungsi di dalam modul TIDAK masuk ke window scope,
+  sehingga onclick inline tidak bisa digunakan.
+-->
+<script type="module" src="main.js"></script>
+</body>
+</html>
