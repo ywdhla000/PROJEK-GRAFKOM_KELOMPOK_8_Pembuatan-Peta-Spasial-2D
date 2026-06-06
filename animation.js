@@ -1,5 +1,7 @@
 
 import { state } from './state.js';
+let _renderFn = null;
+
 export function setRenderFn(fn) {
   _renderFn = fn;
 }
